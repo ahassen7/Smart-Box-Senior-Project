@@ -7,185 +7,167 @@ import { ref, set } from "firebase/database";
 function Register({ onRegister }) {
   const [form, setForm] = useState({
     name: "",
+    phone: "",
     address: "",
     city: "",
     state: "",
     zip: "",
-    phone: "",
     email: "",
     password: "",
   });
-
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
-  const updateField = (field, value) => {
+  const updateField = (field, value) =>
     setForm((prev) => ({ ...prev, [field]: value }));
+
+  const getRoleFromEmail = (email) => {
+    const lower = email.toLowerCase();
+    const courierDomains = ["@amazon.com", "@ups.com", "@fedex.com", "@dhl.com"];
+
+    if (courierDomains.some((d) => lower.endsWith(d))) return "courier";
+    return "homeowner";
   };
 
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setMessage("");
+
+    if (
+      !form.name.trim() ||
+      !form.phone.trim() ||
+      !form.address.trim() ||
+      !form.city.trim() ||
+      !form.state.trim() ||
+      !form.zip.trim()
+    ) {
+      setError("Please fill out all fields.");
+      return;
+    }
 
     try {
-      // Determine courier or homeowner based on email
-      const courierDomains = ["amazon.com", "ups.com", "fedex.com", "dhl.com"];
-      const emailDomain = form.email.split("@")[1]?.toLowerCase();
-
-      const role = courierDomains.includes(emailDomain)
-        ? "courier"
-        : "homeowner";
-
-      // Create Firebase Auth account
-      const userCredential = await createUserWithEmailAndPassword(
+      const cred = await createUserWithEmailAndPassword(
         auth,
         form.email,
         form.password
       );
+      const uid = cred.user.uid;
+      const role = getRoleFromEmail(form.email);
 
-      const uid = userCredential.user.uid;
-
-      // Save user profile data in Realtime Database
       await set(ref(db, `users/${uid}`), {
         name: form.name,
+        phone: form.phone,
         address: form.address,
         city: form.city,
         state: form.state,
         zip: form.zip,
-        phone: form.phone,
         email: form.email,
-        role: role, // <-- saves courier or homeowner
+        role,
       });
 
-      onRegister("login"); // go to login next
+      setMessage("Account created successfully. You can now log in.");
+      onRegister();
     } catch (err) {
-      if (err.code === "auth/weak-password") {
-        setError("Password must be at least 6 characters.");
-      } else if (err.code === "auth/email-already-in-use") {
-        setError("This email is already registered.");
-      } else if (err.code === "auth/invalid-email") {
-        setError("Invalid email address.");
-      } else {
-        setError("Failed to create account. Try again.");
-      }
+      console.error(err);
+      setError("Error creating account.");
     }
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "40px" }}>
-      <h2>Create SmartBox Account</h2>
+    <div className="card">
+      <h2 style={{ marginBottom: "10px" }}>Create SmartBox Account</h2>
+      <p className="text-dim" style={{ marginBottom: "18px" }}>
+        Homeowners use personal emails, couriers use company emails.
+      </p>
 
-      <form onSubmit={handleRegister} style={{ marginTop: "20px" }}>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Full Name"
           value={form.name}
           onChange={(e) => updateField("name", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "260px" }}
           required
         />
-        <br />
-
-        <input
-          type="text"
-          placeholder="Street Address"
-          value={form.address}
-          onChange={(e) => updateField("address", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "260px" }}
-          required
-        />
-        <br />
-
-        <input
-          type="text"
-          placeholder="City"
-          value={form.city}
-          onChange={(e) => updateField("city", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "260px" }}
-          required
-        />
-        <br />
-
-        <input
-          type="text"
-          placeholder="State"
-          value={form.state}
-          onChange={(e) => updateField("state", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "120px" }}
-          required
-        />
-
-        <input
-          type="text"
-          placeholder="ZIP"
-          value={form.zip}
-          onChange={(e) => updateField("zip", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "120px" }}
-          required
-        />
-        <br />
 
         <input
           type="text"
           placeholder="Phone Number"
           value={form.phone}
           onChange={(e) => updateField("phone", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "260px" }}
           required
         />
-        <br />
+
+        <input
+          type="text"
+          placeholder="Street Address"
+          value={form.address}
+          onChange={(e) => updateField("address", e.target.value)}
+          required
+        />
+
+        <input
+          type="text"
+          placeholder="City"
+          value={form.city}
+          onChange={(e) => updateField("city", e.target.value)}
+          required
+        />
+
+        <div style={{ display: "flex", gap: "10px" }}>
+          <input
+            type="text"
+            placeholder="State"
+            value={form.state}
+            onChange={(e) => updateField("state", e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Zip"
+            value={form.zip}
+            onChange={(e) => updateField("zip", e.target.value)}
+            required
+          />
+        </div>
 
         <input
           type="email"
           placeholder="Email"
           value={form.email}
           onChange={(e) => updateField("email", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "260px" }}
           required
         />
-        <br />
 
         <input
           type="password"
-          placeholder="Password (min 6 characters)"
+          placeholder="Password"
           value={form.password}
           onChange={(e) => updateField("password", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "260px" }}
           required
         />
-        <br />
 
-        <button
-          type="submit"
-          style={{
-            padding: "10px 20px",
-            fontSize: "16px",
-            backgroundColor: "green",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            marginTop: "10px",
-          }}
-        >
-          Register
+        {error && (
+          <p style={{ color: "#ff3b30", fontSize: "14px", marginTop: "4px" }}>
+            {error}
+          </p>
+        )}
+        {message && (
+          <p style={{ color: "#28cd41", fontSize: "14px", marginTop: "4px" }}>
+            {message}
+          </p>
+        )}
+
+        <button type="submit" className="btn" style={{ width: "100%", marginTop: "14px" }}>
+          Create Account
         </button>
       </form>
 
-      {error && (
-        <p style={{ color: "red", marginTop: "10px" }}>{error}</p>
-      )}
-
       <button
-        onClick={() => onRegister("login")}
-        style={{
-          marginTop: "20px",
-          backgroundColor: "gray",
-          color: "white",
-          border: "none",
-          padding: "10px",
-          borderRadius: "6px",
-          cursor: "pointer",
-        }}
+        type="button"
+        className="btn btn-secondary"
+        style={{ width: "100%", marginTop: "14px" }}
+        onClick={onRegister}
       >
         Back to Login
       </button>

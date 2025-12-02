@@ -13,7 +13,6 @@ function CourierSettings({ onBack, onLogout }) {
 
   const [message, setMessage] = useState("");
 
-  // Load courier data on page load
   useEffect(() => {
     const uid = auth.currentUser?.uid;
 
@@ -42,7 +41,6 @@ function CourierSettings({ onBack, onLogout }) {
     const uid = auth.currentUser?.uid;
     if (!uid) return;
 
-    // ⭐ REQUIRED FIELD CHECK
     if (!form.name.trim() || !form.phone.trim()) {
       setMessage("Please fill out all fields before saving.");
       return;
@@ -55,7 +53,7 @@ function CourierSettings({ onBack, onLogout }) {
       });
 
       setMessage("Changes saved!");
-    } catch (err) {
+    } catch {
       setMessage("Failed to save changes.");
     }
   };
@@ -70,119 +68,64 @@ function CourierSettings({ onBack, onLogout }) {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "60px" }}>
-
-      {/* BACK BUTTON */}
-      <button
-        onClick={onBack}
+    <div className="card">
+      <div
         style={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-          padding: "8px 16px",
-          backgroundColor: "gray",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "10px",
         }}
       >
-        ⬅ Back
-      </button>
-
-      {/* LOGOUT BUTTON */}
-      <button
-        onClick={handleLogout}
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          padding: "8px 16px",
-          backgroundColor: "gray",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-        }}
-      >
-        Log Out
-      </button>
+        <button className="btn btn-secondary" onClick={onBack}>
+          ⬅ Back
+        </button>
+        <button className="btn btn-secondary" onClick={handleLogout}>
+          Log Out
+        </button>
+      </div>
 
       <h2>Courier Settings</h2>
+      <p className="text-dim">Update your delivery contact details.</p>
 
-      <div style={{ marginTop: "20px" }}>
-        {/* NAME */}
-        <input
-          type="text"
-          placeholder="Full Name"
-          value={form.name}
-          onChange={(e) => updateField("name", e.target.value)}
-          style={{
-            padding: "10px",
-            margin: "10px",
-            width: "260px",
-          }}
-        />
-        <br />
+      <input
+        type="text"
+        placeholder="Full Name"
+        value={form.name}
+        onChange={(e) => updateField("name", e.target.value)}
+      />
 
-        {/* PHONE */}
-        <input
-          type="text"
-          placeholder="Phone Number"
-          value={form.phone}
-          onChange={(e) => updateField("phone", e.target.value)}
-          style={{
-            padding: "10px",
-            margin: "10px",
-            width: "260px",
-          }}
-        />
-        <br />
+      <input
+        type="text"
+        placeholder="Phone Number"
+        value={form.phone}
+        onChange={(e) => updateField("phone", e.target.value)}
+      />
 
-        {/* EMAIL (LOCKED) */}
-        <input
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          disabled
-          style={{
-            padding: "10px",
-            margin: "10px",
-            width: "260px",
-            backgroundColor: "#dfdfdf",
-          }}
-        />
-        <br />
+      <input
+        type="email"
+        value={form.email}
+        disabled
+        style={{ backgroundColor: "#1f1f1f" }}
+      />
 
-        {/* SAVE BUTTON */}
-        <button
-          onClick={handleSave}
+      {message && (
+        <p
           style={{
-            padding: "10px 20px",
-            fontSize: "16px",
-            backgroundColor: "green",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            marginTop: "10px",
+            marginTop: "8px",
+            color: message.includes("Please") ? "#ff3b30" : "#28cd41",
           }}
         >
-          Save Changes
-        </button>
+          {message}
+        </p>
+      )}
 
-        {/* MESSAGE */}
-        {message && (
-          <p
-            style={{
-              marginTop: "15px",
-              color: message.includes("Please") ? "red" : "green",
-            }}
-          >
-            {message}
-          </p>
-        )}
-      </div>
+      <button
+        className="btn"
+        style={{ width: "100%", marginTop: "16px" }}
+        onClick={handleSave}
+      >
+        Save Changes
+      </button>
     </div>
   );
 }

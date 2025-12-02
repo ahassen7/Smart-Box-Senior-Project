@@ -43,97 +43,76 @@ function CourierDashboard({ onLogout, onSettings }) {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "80px" }}>
-
-      {/* SETTINGS BUTTON */}
-      <button
-        onClick={onSettings}
+    <div className="card-wide">
+      <div
         style={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-          padding: "8px 16px",
-          backgroundColor: "orange",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "10px",
         }}
       >
-        Settings
-      </button>
-
-      {/* LOGOUT BUTTON */}
-      <button
-        onClick={handleLogout}
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          padding: "8px 16px",
-          backgroundColor: "gray",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-        }}
-      >
-        Log Out
-      </button>
+        <button className="btn btn-secondary" onClick={onSettings}>
+          Settings
+        </button>
+        <button className="btn btn-secondary" onClick={handleLogout}>
+          Log Out
+        </button>
+      </div>
 
       <h2>Courier Delivery Panel</h2>
+      <p className="text-dim">
+        View your next drop location and unlock when you arrive.
+      </p>
 
-      {/* ADDRESS DISPLAY */}
-      <h3 style={{ marginTop: "20px" }}>Next Delivery Address:</h3>
-      <p style={{ fontSize: "18px", fontWeight: "bold" }}>{currentAddress}</p>
-
-      <button
-        onClick={handleNextAddress}
+      <div
         style={{
-          padding: "10px 20px",
-          fontSize: "16px",
-          marginTop: "15px",
-          backgroundColor: "orange",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
+          marginTop: "20px",
+          padding: "16px",
+          borderRadius: "12px",
+          background: "#151515",
+          border: "1px solid var(--border)",
         }}
       >
-        Next Address
-      </button>
+        <h3 style={{ marginTop: 0 }}>Next Delivery Address</h3>
+        <p style={{ fontSize: "17px", fontWeight: "bold" }}>{currentAddress}</p>
 
-      <hr style={{ marginTop: "40px", width: "60%" }} />
+        <button
+          onClick={handleNextAddress}
+          className="btn btn-secondary"
+          style={{ marginTop: "10px" }}
+        >
+          Next Address
+        </button>
+      </div>
 
-      {/* ARRIVAL BUTTON */}
-      <p>Please press when you arrive.</p>
-
-      <button
-        onClick={handleArrival}
+      <div
         style={{
-          padding: "12px 24px",
-          fontSize: "18px",
-          marginTop: "10px",
-          backgroundColor: "blue",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
+          marginTop: "28px",
+          padding: "16px",
+          borderRadius: "12px",
+          background: "#151515",
+          border: "1px solid var(--border)",
         }}
       >
-        I'm Here
-      </button>
+        <p>Please press the button when you arrive at the SmartBox.</p>
 
-      {/* NFC MESSAGE */}
-      {message && (
-        <p style={{ marginTop: "20px", fontSize: "18px", color: "green" }}>
-          {message}
-        </p>
-      )}
+        <button
+          onClick={handleArrival}
+          className="btn"
+          style={{ marginTop: "10px" }}
+        >
+          I'm Here
+        </button>
 
-      <h3 style={{ marginTop: "40px", color: "orange" }}>
-        Please Scan Your NFC Tag
-      </h3>
+        {message && (
+          <p style={{ marginTop: "12px", color: "#28cd41" }}>{message}</p>
+        )}
+
+        <h3 style={{ marginTop: "24px", color: "var(--accent-glow)" }}>
+          Please Scan Your NFC Tag
+        </h3>
+        <p className="text-dim">The SmartBox will unlock after validation.</p>
+      </div>
     </div>
   );
 }

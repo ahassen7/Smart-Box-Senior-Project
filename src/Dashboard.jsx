@@ -16,7 +16,7 @@ function Dashboard({ onLogout, onSettings, onHistory }) {
     onValue(logsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        setLogs(Object.values(data).reverse().slice(0, 20)); // Only fetch 20
+        setLogs(Object.values(data).reverse().slice(0, 20));
       }
     });
   }, []);
@@ -39,87 +39,79 @@ function Dashboard({ onLogout, onSettings, onHistory }) {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "40px" }}>
-      
-      {/* Settings Button */}
-      <button
-        onClick={onSettings}
+    <div className="card-wide">
+      <div
         style={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-          padding: "8px 16px",
-          backgroundColor: "orange",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer"
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "10px",
         }}
       >
-        Settings
-      </button>
-
-      {/* Logout */}
-      <button
-        onClick={handleLogout}
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          padding: "8px 16px",
-          backgroundColor: "gray",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer"
-        }}
-      >
-        Log Out
-      </button>
+        <button className="btn btn-secondary" onClick={onSettings}>
+          Settings
+        </button>
+        <button className="btn btn-secondary" onClick={handleLogout}>
+          Log Out
+        </button>
+      </div>
 
       <h2>Homeowner Dashboard</h2>
-      <p><b>Lock Status:</b> {status}</p>
+      <p className="text-dim">Control and monitor your SmartBox.</p>
 
-      {/* Lock / Unlock */}
-      <button
-        onClick={toggleLock}
+      <div
         style={{
-          padding: "10px 20px",
-          marginTop: "20px",
-          backgroundColor: status === "LOCKED" ? "green" : "red",
-          color: "white",
-          fontSize: "18px",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer"
+          marginTop: "25px",
+          padding: "18px",
+          borderRadius: "12px",
+          border: "1px solid var(--border)",
+          background: "#151515",
         }}
       >
-        {status === "LOCKED" ? "Unlock Box" : "Lock Box"}
-      </button>
+        <p style={{ marginBottom: "10px" }}>
+          <b>Lock Status:</b> {status}
+        </p>
 
-      {/* Recent Activity Summary */}
-      <h3 style={{ marginTop: "40px" }}>Recent Activity</h3>
+        <button
+          onClick={toggleLock}
+          className="btn"
+          style={{
+            width: "100%",
+            marginTop: "10px",
+            background: status === "LOCKED" ? "var(--success)" : "var(--danger)",
+            boxShadow:
+              status === "LOCKED"
+                ? "0 0 10px rgba(40,205,65,0.6)"
+                : "0 0 10px rgba(255,59,48,0.6)",
+          }}
+        >
+          {status === "LOCKED" ? "Unlock Box" : "Lock Box"}
+        </button>
+      </div>
+
+      <h3 style={{ marginTop: "30px" }}>Recent Activity</h3>
       {logs.length > 0 ? (
-        <div style={{ marginTop: "15px", fontSize: "16px" }}>
-          <p><b>Last Action:</b> {logs[0].action}</p>
-          <p><b>Time:</b> {logs[0].time}</p>
+        <div
+          style={{
+            marginTop: "10px",
+            padding: "14px",
+            borderRadius: "10px",
+            background: "#151515",
+            border: "1px solid var(--border)",
+          }}
+        >
+          <p>
+            <b>Last Action:</b> {logs[0].action}
+          </p>
+          <p className="text-dim">Time: {logs[0].time}</p>
         </div>
       ) : (
-        <p>No recent activity</p>
+        <p className="text-dim">No recent activity.</p>
       )}
 
-      {/* Go To History Page */}
       <button
         onClick={onHistory}
-        style={{
-          padding: "10px 20px",
-          marginTop: "20px",
-          backgroundColor: "blue",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer"
-        }}
+        className="btn btn-secondary"
+        style={{ marginTop: "24px" }}
       >
         View Full History
       </button>

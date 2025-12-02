@@ -34,47 +34,63 @@ function App() {
   return (
     <>
       {page === "login" && (
-        <Login
-          onLogin={(toPage) => {
-            if (toPage === "register") setPage("register");
-            else handleLoginSuccess();
-          }}
-        />
+        <div className="page">
+          <Login
+            onLogin={(toPage) => {
+              if (toPage === "register") setPage("register");
+              else handleLoginSuccess();
+            }}
+          />
+        </div>
       )}
 
-      {page === "register" && <Register onRegister={() => setPage("login")} />}
+      {page === "register" && (
+        <div className="page">
+          <Register onRegister={() => setPage("login")} />
+        </div>
+      )}
 
       {page === "dashboard" && (
-        <Dashboard
-          onLogout={handleLogout}
-          onSettings={() => setPage("homeowner-settings")}
-          onHistory={() => setPage("homeowner-history")}
-        />
+        <div className="page">
+          <Dashboard
+            onLogout={handleLogout}
+            onSettings={() => setPage("homeowner-settings")}
+            onHistory={() => setPage("homeowner-history")}
+          />
+        </div>
       )}
 
       {page === "homeowner-settings" && (
-        <HomeownerSettings
-          onBack={() => setPage("dashboard")}
-          onLogout={handleLogout}
-        />
+        <div className="page">
+          <HomeownerSettings
+            onBack={() => setPage("dashboard")}
+            onLogout={handleLogout}
+          />
+        </div>
       )}
 
       {page === "homeowner-history" && (
-        <HomeownerHistory onBack={() => setPage("dashboard")} />
+        <div className="page">
+          <HomeownerHistory onBack={() => setPage("dashboard")} />
+        </div>
       )}
 
       {page === "courier" && (
-        <CourierDashboard
-          onLogout={handleLogout}
-          onSettings={() => setPage("courier-settings")}
-        />
+        <div className="page">
+          <CourierDashboard
+            onLogout={handleLogout}
+            onSettings={() => setPage("courier-settings")}
+          />
+        </div>
       )}
 
       {page === "courier-settings" && (
-        <CourierSettings
-          onBack={() => setPage("courier")}
-          onLogout={handleLogout}
-        />
+        <div className="page">
+          <CourierSettings
+            onBack={() => setPage("courier")}
+            onLogout={handleLogout}
+          />
+        </div>
       )}
     </>
   );

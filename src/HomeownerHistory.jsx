@@ -17,59 +17,50 @@ function HomeownerHistory({ onBack }) {
   }, []);
 
   return (
-    <div style={{ textAlign: "center", marginTop: "40px" }}>
-
-      {/* BACK BUTTON */}
-      <button
-        onClick={onBack}
+    <div className="card-wide">
+      <div
         style={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-          padding: "8px 16px",
-          backgroundColor: "gray",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer"
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "10px",
         }}
       >
-        ⬅ Back
-      </button>
+        <button className="btn btn-secondary" onClick={onBack}>
+          ⬅ Back
+        </button>
+      </div>
 
-      <h2>Delivery History</h2>
+      <h2>Delivery & Lock History</h2>
+      <p className="text-dim">
+        The most recent 100 events are shown below.
+      </p>
 
       <div
         style={{
-          width: "70%",
-          margin: "auto",
-          maxHeight: "70vh",
-          overflowY: "scroll",
-          padding: "10px",
-          borderRadius: "10px",
-          border: "1px solid #ddd",
-          backgroundColor: "#fafafa",
-          marginTop: "20px"
+          marginTop: "18px",
+          maxHeight: "60vh",
+          overflowY: "auto",
         }}
       >
         {logs.map((log, i) => (
           <div
             key={i}
             style={{
-              background: "white",
-              padding: "15px",
-              marginBottom: "10px",
-              borderRadius: "8px",
-              boxShadow: "0 0 4px rgba(0,0,0,0.1)"
+              background: "#151515",
+              padding: "12px",
+              borderRadius: "10px",
+              marginBottom: "8px",
+              border: "1px solid var(--border)",
             }}
           >
             <b>{log.action}</b>
             <br />
-            <span style={{ fontSize: "14px", color: "gray" }}>
-              {log.time}
-            </span>
+            <span className="text-dim">{log.time}</span>
           </div>
         ))}
+        {logs.length === 0 && (
+          <p className="text-dim">No history available yet.</p>
+        )}
       </div>
     </div>
   );

@@ -47,7 +47,6 @@ function HomeownerSettings({ onBack, onLogout }) {
     const uid = auth.currentUser?.uid;
     if (!uid) return;
 
-    // VALIDATION — prevent empty fields
     if (
       !form.name.trim() ||
       !form.phone.trim() ||
@@ -70,7 +69,7 @@ function HomeownerSettings({ onBack, onLogout }) {
         zip: form.zip,
       });
       setMessage("Changes saved!");
-    } catch (err) {
+    } catch {
       setMessage("Failed to save changes.");
     }
   };
@@ -85,133 +84,89 @@ function HomeownerSettings({ onBack, onLogout }) {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "60px" }}>
-
-      <button
-        onClick={onBack}
+    <div className="card">
+      <div
         style={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-          padding: "8px 16px",
-          backgroundColor: "gray",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "10px",
         }}
       >
-        ⬅ Back
-      </button>
-
-      <button
-        onClick={handleLogout}
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          padding: "8px 16px",
-          backgroundColor: "gray",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-        }}
-      >
-        Log Out
-      </button>
+        <button className="btn btn-secondary" onClick={onBack}>
+          ⬅ Back
+        </button>
+        <button className="btn btn-secondary" onClick={handleLogout}>
+          Log Out
+        </button>
+      </div>
 
       <h2>Homeowner Settings</h2>
+      <p className="text-dim">Update your contact and address details.</p>
 
-      <div style={{ marginTop: "20px" }}>
-        <input
-          type="text"
-          placeholder="Full Name"
-          value={form.name}
-          onChange={(e) => updateField("name", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "260px" }}
-        />
-        <br />
-
-        <input
-          type="text"
-          placeholder="Phone Number"
-          value={form.phone}
-          onChange={(e) => updateField("phone", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "260px" }}
-        />
-        <br />
-
-        <input
-          type="text"
-          placeholder="Street Address"
-          value={form.address}
-          onChange={(e) => updateField("address", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "260px" }}
-        />
-        <br />
-
-        <input
-          type="text"
-          placeholder="City"
-          value={form.city}
-          onChange={(e) => updateField("city", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "260px" }}
-        />
-        <br />
-
+      <input
+        type="text"
+        placeholder="Full Name"
+        value={form.name}
+        onChange={(e) => updateField("name", e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Phone Number"
+        value={form.phone}
+        onChange={(e) => updateField("phone", e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Street Address"
+        value={form.address}
+        onChange={(e) => updateField("address", e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="City"
+        value={form.city}
+        onChange={(e) => updateField("city", e.target.value)}
+      />
+      <div style={{ display: "flex", gap: "10px" }}>
         <input
           type="text"
           placeholder="State"
           value={form.state}
           onChange={(e) => updateField("state", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "120px" }}
         />
-
         <input
           type="text"
           placeholder="Zip"
           value={form.zip}
           onChange={(e) => updateField("zip", e.target.value)}
-          style={{ padding: "10px", margin: "10px", width: "120px" }}
         />
-        <br />
+      </div>
 
-        <input
-          type="email"
-          value={form.email}
-          disabled
-          style={{
-            padding: "10px",
-            margin: "10px",
-            width: "260px",
-            backgroundColor: "#e5e5e5",
-          }}
-        />
-        <br />
+      <input
+        type="email"
+        value={form.email}
+        disabled
+        style={{ backgroundColor: "#1f1f1f" }}
+      />
 
-        <button
-          onClick={handleSave}
+      {message && (
+        <p
           style={{
-            padding: "10px 20px",
-            fontSize: "16px",
-            backgroundColor: "green",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            marginTop: "10px",
+            marginTop: "8px",
+            color: message.includes("Please") ? "#ff3b30" : "#28cd41",
           }}
         >
-          Save Changes
-        </button>
+          {message}
+        </p>
+      )}
 
-        {message && (
-          <p style={{ marginTop: "15px", color: message.includes("Please") ? "red" : "green" }}>
-            {message}
-          </p>
-        )}
-      </div>
+      <button
+        className="btn"
+        style={{ width: "100%", marginTop: "16px" }}
+        onClick={handleSave}
+      >
+        Save Changes
+      </button>
     </div>
   );
 }
